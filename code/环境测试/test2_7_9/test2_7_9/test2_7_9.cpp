@@ -1,0 +1,287 @@
+#include "stdio.h" 
+#include "stdlib.h" 
+#include "mpi.h" 
+#include "math.h" 
+#include <time.h>
+#include <stdlib.h>
+#include <iostream>
+using namespace std;
+
+#define a(x,y) a[x*M+y] 
+#define b(x) b[x] 
+#define A(x,y) A[x*M+y] 
+#define B(x) B[x] 
+#define floatsize sizeof(float) 
+#define intsize sizeof(int) 
+int M;
+int N;
+int m;
+float *A;
+float *B;
+double starttime;
+double time1;
+double time2;
+int my_rank;
+int p;
+int l;
+MPI_Status status;
+
+void Environment_Finalize(float *a, float *b, float *x, float *f)
+{
+	free(a);
+	free(b);
+	free(x);
+	free(f);
+}
+
+int main(int argc, char **argv)
+{
+	int i, j, t, k, my_rank, group_size;
+	int i1, i2;
+	int v, w;
+	float temp;
+	int tem;
+	float *sum;
+	float *f;
+	float lmax;
+	float *a;
+	float *b;
+	float *x;
+	int *shift;
+
+	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &group_size); //组进程大小
+	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);   //组进程编号
+	p = group_size;//p即为核心数
+
+	if (my_rank == 0)
+	{
+		starttime = MPI_Wtime();
+		cout << "输入高斯列主元消去法x个数" << endl;
+		
+		cin >> M;
+		N = M + 1;
+
+		srand((unsigned)time(NULL));
+		A = (float *)malloc(floatsize*M*M);
+		B = (float *)malloc(floatsize*M);
+
+		for (i = 0; i < M; i++)
+		{
+			for (j = 0; j < M; j++)
+			{
+				A(i, j) = rand();
+			}
+			B(i) = rand();
+		}
+	}
+
+	MPI_Bcast(&M, 1, MPI_INT, 0, MPI_COMM_WORLD); /* 0号处理机将M广播给所有处理机 */
+	m = M / p;
+	if (M%p != 0) m++;
+
+	f = (float*)malloc(sizeof(float)*(M + 1)); /* 各处理机为主行元素建立发送和接收缓冲区(M+1) */
+	a = (float*)malloc(sizeof(float)*m*M); /* 分配至各处理机的子矩阵大小为m*M */
+	b = (float*)malloc(sizeof(float)*m); /* 分配至各处理机的子向量大小为m */
+	sum = (float*)malloc(sizeof(float)*m);
+	x = (float*)malloc(sizeof(float)*M);
+	shift = (int*)malloc(sizeof(int)*M);
+
+
+	for (i = 0; i<M; i++)
+		shift[i] = i;                   //进行行列变换选取主元时的标记量
+
+										/*
+										0号处理机采用行交叉划分将矩阵A划分为大小为m*M的p块子矩阵,将B划分为大小
+										为m的p块子向量，依次发送给1至p-1号处理机
+										*/
+	if (my_rank == 0)
+	{
+		for (i = 0; i<m; i++)
+			for (j = 0; j<M; j++)
+				a(i, j) = A(i*p, j);
+
+		for (i = 0; i<m; i++)
+			b(i) = B(i*p);
+	}
+
+	if (my_rank == 0)
+	{
+		for (i = 0; i<M; i++)
+			if ((i%p) != 0)
+			{
+				i1 = i%p;
+				i2 = i / p + 1;
+
+				MPI_Send(&A(i, 0), M, MPI_FLOAT, i1, i2, MPI_COMM_WORLD);
+				MPI_Send(&B(i), 1, MPI_FLOAT, i1, i2, MPI_COMM_WORLD);
+			}
+	} /* my_rank==0 */
+	else /* my_rank !=0 */
+	{
+		for (i = 0; i<m; i++)
+		{
+			MPI_Recv(&a(i, 0), M, MPI_FLOAT, 0, i + 1, MPI_COMM_WORLD, &status);
+			MPI_Recv(&b(i), 1, MPI_FLOAT, 0, i + 1, MPI_COMM_WORLD, &status);
+		}
+	}
+
+	time1 = MPI_Wtime(); /* 开始计时 */
+
+	for (i = 0; i<m; i++) /* 消去 */
+		for (j = 0; j<p; j++)
+		{
+			if (my_rank == j) /* j号处理机负责广播主行元素 */
+			{
+				v = i*p + j; /* 主元素在原系数矩阵A中的行号和列号为v */
+				lmax = a(i, v);
+				l = v;
+
+				for (k = v + 1; k<M; k++) /* 在同行的元素中找最大元，并确定最大元所在的列l */
+					if (fabs(a(i, k))>lmax)
+					{
+						lmax = a(i, k);
+						l = k;
+					}
+
+				if (l != v) /* 列交换 */
+				{
+					for (t = 0; t<m; t++)
+					{
+						temp = a(t, v);
+						a(t, v) = a(t, l);
+						a(t, l) = temp;
+					}
+
+					tem = shift[v];
+					shift[v] = shift[l];
+					shift[l] = tem;
+
+				}
+
+				for (k = v + 1; k<M; k++) /* 归一化 */
+					a(i, k) = a(i, k) / a(i, v);
+
+				b(i) = b(i) / a(i, v);
+				a(i, v) = 1;
+
+				for (k = v + 1; k<M; k++)
+					f[k] = a(i, k);
+				f[M] = b(i);
+
+				/* 发送归一化后的主行 */
+				MPI_Bcast(&f[0], M + 1, MPI_FLOAT, my_rank, MPI_COMM_WORLD);
+				/* 发送主行中主元素所在的列号 */
+				MPI_Bcast(&l, 1, MPI_INT, my_rank, MPI_COMM_WORLD);
+
+			}
+			else          //从进程
+			{
+				v = i*p + j;
+				MPI_Bcast(&f[0], M + 1, MPI_FLOAT, j, MPI_COMM_WORLD);
+				MPI_Bcast(&l, 1, MPI_INT, j, MPI_COMM_WORLD);
+
+				if (l != v)
+				{
+					for (t = 0; t<m; t++)
+					{
+						temp = a(t, v);
+						a(t, v) = a(t, l);
+						a(t, l) = temp;
+					}
+
+					tem = shift[v];
+					shift[v] = shift[l];
+					shift[l] = tem;
+				}
+			}
+
+			if (my_rank <= j)
+				for (k = i + 1; k<m; k++)
+				{
+					for (w = v + 1; w<M; w++)
+						a(k, w) = a(k, w) - f[w] * a(k, v);
+					b(k) = b(k) - f[M] * a(k, v);
+				}
+
+			if (my_rank>j)
+				for (k = i; k<m; k++)
+				{
+					for (w = v + 1; w<M; w++)
+						a(k, w) = a(k, w) - f[w] * a(k, v);
+					b(k) = b(k) - f[M] * a(k, v);
+				}
+
+		} /* for i j */
+
+	for (i = 0; i<m; i++)
+		sum[i] = 0.0;
+
+	for (i = m - 1; i >= 0; i--) /* 回代 */
+		for (j = p - 1; j >= 0; j--)
+			if (my_rank == j)
+			{
+				x[i*p + j] = (b(i) - sum[i]) / a(i, i*p + j);
+
+				MPI_Bcast(&x[i*p + j], 1, MPI_FLOAT, my_rank, MPI_COMM_WORLD);
+				for (k = 0; k<i; k++)
+					sum[k] = sum[k] + a(k, i*p + j)*x[i*p + j];
+			}
+			else
+			{
+				MPI_Bcast(&x[i*p + j], 1, MPI_FLOAT, j, MPI_COMM_WORLD);
+				if (my_rank>j)
+					for (k = 0; k<i; k++)
+						sum[k] = sum[k] + a(k, i*p + j)*x[i*p + j];
+
+				if (my_rank<j)
+					for (k = 0; k <= i; k++)
+						sum[k] = sum[k] + a(k, i*p + j)*x[i*p + j];
+			}
+
+	if (my_rank != 0)
+		for (i = 0; i<m; i++)
+			MPI_Send(&x[i*p + my_rank], 1, MPI_FLOAT, 0, i, MPI_COMM_WORLD);
+	else
+		for (i = 1; i<p; i++)
+			for (j = 0; j<m; j++)
+				MPI_Recv(&x[j*p + i], 1, MPI_FLOAT, i, j, MPI_COMM_WORLD, &status);
+
+	if (my_rank == 0)
+	{
+		cout << "输入数组" << endl;
+		cout << M << "*"<<N << endl;
+		for (i = 0; i<M; i++)
+		{
+			for (j = 0; j<M; j++) cout << A(i, j) << "   ";
+			cout << B(i);
+			cout << endl;
+		}
+		cout << "方程组的解" << endl;
+		for (k = 0; k<M; k++)
+		{
+			for (i = 0; i<M; i++)
+			{
+				if (shift[i] == k) cout << "x[" << k << "]=" << x[i] << endl;
+			}
+		}
+	}
+
+	time2 = MPI_Wtime();//结束计时
+	cout << "输入数组大小：" << M << "*" << N<< endl;
+	cout << "计算核数" << p << endl;
+	if (my_rank == 0)
+	{
+		cout << endl;
+		cout << "Whole running time （总共用时）= " << time2 - starttime << endl;
+		cout << "Distribute data time（分发数据用时） = " << time1 - starttime << endl;
+		cout << "Parallel compute time（并行计算用时） = " << time2 - time1 << endl;
+	}
+
+	MPI_Finalize();
+	Environment_Finalize(a, b, x, f);
+	system("pause");
+
+
+	return(0);
+}

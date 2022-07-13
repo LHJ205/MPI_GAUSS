@@ -1,0 +1,37 @@
+﻿生成启动时间为 2022/7/9 17:35:26。
+     1>项目“H:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         F:\xuexi\Visual Studio\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yc"stdafx.h" /Fp"Debug\test2_7_9.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         F:\xuexi\Visual Studio\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\test2_7_9.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt test2_7_9.cpp
+         test2_7_9.cpp
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(17): warning C4627: “#include <iomanip>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(17): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(18): warning C4627: “#include <vector>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(18): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(19): warning C4627: “#include <algorithm>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(19): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(20): warning C4627: “#include <cmath>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(20): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(21): warning C4627: “#include <cstddef>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(21): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(22): warning C4627: “#include <cstdio>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(22): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(23): warning C4627: “#include <cstdlib>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(23): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(24): warning C4627: “#include <iostream>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(24): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(25): warning C4627: “#include <fstream>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(25): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(26): warning C4627: “#include <ctime>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(26): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(27): warning C4627: “#include "mpi.h"”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(27): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(28): warning C4627: “#include <sstream>”: 在查找预编译头使用时跳过
+         h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(28): note: 将指令添加到“stdafx.h”或重新生成预编译头
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(388): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "stdafx.h"”?
+     1>已完成生成项目“H:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:00.65

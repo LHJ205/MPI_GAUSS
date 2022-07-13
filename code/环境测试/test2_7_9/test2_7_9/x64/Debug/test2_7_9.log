@@ -1,0 +1,17 @@
+﻿生成启动时间为 2022/7/12 18:10:59。
+     1>项目“H:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         F:\xuexi\Visual Studio\VC\bin\x86_amd64\CL.exe /c /I"H:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\\" /ZI /nologo /W3 /WX- /sdl /Od /D _DEBUG /D _CONSOLE /D MPICH_SKIP_MPICXX /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt test2_7_9.cpp
+         test2_7_9.cpp
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(73): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+     1>h:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.cpp(75): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+       Link:
+         F:\xuexi\Visual Studio\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"H:\xuststudy\并行计算课设\环境测试\test2_7_9\x64\Debug\test2_7_9.exe" /INCREMENTAL /NOLOGO msmpi.lib msmpifec.lib msmpifmc.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"H:\xuststudy\并行计算课设\环境测试\test2_7_9\x64\Debug\test2_7_9.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"H:\xuststudy\并行计算课设\环境测试\test2_7_9\x64\Debug\test2_7_9.lib" /MACHINE:X64 x64\Debug\gauss.obj
+         x64\Debug\stdafx.obj
+         x64\Debug\test2_7_9.obj
+         test2_7_9.vcxproj -> H:\xuststudy\并行计算课设\环境测试\test2_7_9\x64\Debug\test2_7_9.exe
+     1>已完成生成项目“H:\xuststudy\并行计算课设\环境测试\test2_7_9\test2_7_9\test2_7_9.vcxproj”(Build 个目标)的操作。
+
+已成功生成。
+
+已用时间 00:00:00.54
